@@ -19,13 +19,15 @@ english_word=""
 
 def next_card():
     global english_word
+    global flip_timer
+    window.after_cancel(flip_timer)
     word_item = choice(word_dict)
     french_word = word_item['French']
     english_word = word_item["English"]
     canvas.itemconfigure(card_title, text="French", fill='black')
     canvas.itemconfigure(card_word, text=french_word, fill='black')
     canvas.itemconfigure(canvas_image, image=card_front_img)
-    window.after(3000, flip_to_back)
+    flip_timer = window.after(3000, flip_to_back)
 def flip_to_back():
     canvas.itemconfigure(card_title, text="English", fill='white')
     canvas.itemconfigure(card_word, text=english_word, fill='white')
@@ -43,6 +45,7 @@ wrong_button.grid(row=1, column=0)
 right_image = PhotoImage(file=RIGHT_BTN_IMAGE)
 right_button = Button(image=right_image, highlightthickness=0, command=next_card)
 right_button.grid(row=1, column=1)
+flip_timer = window.after(3000, flip_to_back)
 next_card()
-window.after(3000, flip_to_back)
+
 window.mainloop()
