@@ -17,6 +17,10 @@ try:
     word_data_frame = pandas.read_csv(WORDS_TO_LEARN)
 except FileNotFoundError:
     word_data_frame = pandas.read_csv(DATA_FILE)
+except pandas.errors.EmptyDataError:
+    word_data_frame = pandas.read_csv(DATA_FILE)
+
+
 word_dict = word_data_frame.to_dict(orient="records")
 chosen_word={}
 
@@ -38,13 +42,13 @@ def flip_to_back():
     canvas.itemconfigure(canvas_image, image=card_back_img)
 
 def update_word_list():
-    next_card()
-    word_dict.remove(chosen_word)
-    df = pandas.DataFrame.from_records(word_dict)
-    df.to_csv(WORDS_TO_LEARN, index=False)
-    print(df)
-
-
+    if len(word_dict)!=0:
+        next_card()
+        word_dict.remove(chosen_word)
+        df = pandas.DataFrame.from_records(word_dict)
+        df.to_csv(WORDS_TO_LEARN, index=False)
+    else:
+        return
 
 card_front_img = PhotoImage(file=CARD_FRONT)
 card_back_img = PhotoImage(file=CARD_BACK)
